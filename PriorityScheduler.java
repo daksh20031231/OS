@@ -1,65 +1,58 @@
 import java.util.*;
-public class practice {
+
+public class PriorityScheduler {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        System.out.print("ENTER NUMBER OF PROCESSES: ");
-        int n  = sc.nextInt();
+        System.out.print("Enter the number of processes: ");
+        int n = sc.nextInt();
 
         int[] priority = new int[n];
-        int[] bursttime = new int[n];
-        int[] waitingtime = new int[n];
-        int[] turnaroundtime = new int[n];
+        int[] burstTime = new int[n];
+        int[] waitingTime = new int[n];
+        int[] turnaroundTime = new int[n];
+        int totalWaitingTime = 0;
+        int totalTurnaroundTime = 0;
 
-        System.out.println("ENTER PRIORITY AND BURST TIME FOR EACH PROCESS: ");
-        for(int i = 0 ; i < n ; i++ ){
-            System.out.print("PROCESS " + (i+1) + ": ");
+        // Input priorities and burst times for each process
+        for (int i = 0; i < n; i++) {
+            System.out.printf("Enter priority and burst time for process %d: ", i + 1);
             priority[i] = sc.nextInt();
-            bursttime[i] = sc.nextInt();
+            burstTime[i] = sc.nextInt();
         }
 
-
-//        ARRANGING BURST TIME IN ASCENDING ORDER
-        for(int i = 0; i < n-1 ; i++){
-            for(int j = i+1 ; j < n ; j++){
-                if(priority[i] < priority[j]){
-                    int temppriority = priority[i];
-                    int tempbursttime = bursttime[i];
+        // Sort processes based on priority (higher priority comes first)
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (priority[i] < priority[j]) {
+                    int tempPriority = priority[i];
+                    int tempBurstTime = burstTime[i];
                     priority[i] = priority[j];
-                    bursttime[i] = bursttime[j];
-                    priority[j] = temppriority;
-                    bursttime[j] = tempbursttime;
+                    burstTime[i] = burstTime[j];
+                    priority[j] = tempPriority;
+                    burstTime[j] = tempBurstTime;
                 }
             }
         }
 
-
-
-        waitingtime[0] = 0;
-        for(int i = 1; i < n ; i++){
-            waitingtime[i] = waitingtime[i-1] + bursttime[i-1];
+        // Calculate waiting time and turnaround time for each process
+        for (int i = 0; i < n; i++) {
+            waitingTime[i] = totalWaitingTime;
+            turnaroundTime[i] = waitingTime[i] + burstTime[i];
+            totalWaitingTime += burstTime[i];
+            totalTurnaroundTime += turnaroundTime[i];
         }
 
-        for (int i = 0 ; i < n ; i++){
-            turnaroundtime[i] = waitingtime[i] + bursttime[i];
+        // Calculate average waiting time and turnaround time
+        double avgWaitingTime = (double) totalWaitingTime / n;
+        double avgTurnaroundTime = (double) totalTurnaroundTime / n;
+
+        // Print results
+        System.out.println("Process\tPriority\tBurst Time\tWaiting Time\tTurnaround Time");
+        for (int i = 0; i < n; i++) {
+            System.out.printf("%d\t\t%d\t\t%d\t\t%d\t\t%d\n", i + 1, priority[i], burstTime[i], waitingTime[i], turnaroundTime[i]);
         }
-
-        int  tat = 0 , avgwait = 0 ;
-        for (int i = 0 ; i < n ; i++){
-            tat += turnaroundtime[i];
-            avgwait += waitingtime[i];
-        }
-
-//        PRINTING VALUES
-
-        System.out.println("PRIORITY SCHEDULING: ");
-        System.out.println("PROCESS \t\t PRIORITY \t\t BURST TIME \t\t WAITING TIME \t\t TURNAROUND TIME");
-        for (int  i = 0 ; i < n ; i++){
-            System.out.println((i+1) + "\t\t" + priority[i] + "\t\t" + bursttime[i] + "\t\t" + waitingtime[i]  + "\t\t" + turnaroundtime[i]);
-        }
-
-        System.out.println("AVG WAITING TIME = " + (avgwait/n));
-        System.out.println("AVG TURNAROUND TIME = " + (tat/n));
-
+        System.out.printf("Average waiting time: %.2f\n", avgWaitingTime);
+        System.out.printf("Average turnaround time: %.2f\n", avgTurnaroundTime);
     }
 }
