@@ -19,7 +19,7 @@ public class SJF {
 
         // Sorting the burst time in ascending order
         for(int i = 0; i < n-1; i++) {
-            for(int j = 0; j < n-i-1; j++) {
+            for(int j = 0; j < i; j++) {
                 if(burstTime[j] > burstTime[j+1]) {
                     int temp = burstTime[j];
                     burstTime[j] = burstTime[j+1];
